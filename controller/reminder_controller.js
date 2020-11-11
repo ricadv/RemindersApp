@@ -2,7 +2,7 @@ let database = require("../database");
 
 let remindersController = {
   // Show a list of reminders
-  list: (req, res) => {
+  list: (req, res) => { 
     res.render('reminder/index', { reminders: database.cindy.reminders })
   },
 
@@ -20,6 +20,7 @@ let remindersController = {
     if (searchResult != undefined) {
       res.render('reminder/single-reminder', { reminderItem: searchResult })
     } else {
+      // res.redirect("/reminder",)
       res.render('reminder/index', { reminders: database.cindy.reminders })
     }
   },
@@ -39,18 +40,42 @@ let remindersController = {
 
   // Show the Edit Reminder Page
   edit: (req, res) => {
-    // ⭐️ your implementation here ⭐️
-
+    let reminderToFind = req.params.id;
+    let searchResult = database.cindy.reminders.find(function (reminder) {
+      return reminder.id == reminderToFind;
+    })
+    if (searchResult != undefined) {
+      res.render('reminder/edit', { reminderItem: searchResult })
+    } else {
+      res.redirect("/reminders")
+      // res.render('reminder/index', { reminders: database.cindy.reminders })
+    }
   },
 
   // Edit the Reminder
   update: (req, res) => {
-    // ⭐️ your implementation here ⭐️
+    let reminder = {
+      id: req.params.id,
+      title: req.body.title,
+      description: req.body.description,
+      completed: req.body.completed == "true"
+    }
+    database.cindy.reminders.splice(reminder.id-1, 1, reminder);
+
+    res.render('reminder/single-reminder', { reminderItem: database.cindy.reminders[reminder.id-1] })
   },
 
   // Delete the Reminder
   delete: (req, res) => {
-    // ⭐️ your implementation here ⭐️
+    let reminderId = req.params.id;
+    let updatedReminders = database.cindy.reminders.filter((reminder) => {
+      return reminder.id != reminderId
+    })
+    updatedReminders.forEach((reminder, index) => {
+      reminder.id = [index+1]
+    })
+    database.cindy.reminders = updatedReminders
+    res.redirect('/reminders')
   }
 }
 
