@@ -20,8 +20,8 @@ let remindersController = {
     if (searchResult != undefined) {
       res.render('reminder/single-reminder', { reminderItem: searchResult })
     } else {
-      // res.redirect("/reminder",)
-      res.render('reminder/index', { reminders: database.cindy.reminders })
+      res.redirect("/reminders")
+      // res.render('reminder/index', { reminders: database.cindy.reminders })
     }
   },
 
@@ -54,27 +54,25 @@ let remindersController = {
 
   // Edit the Reminder
   update: (req, res) => {
-    let reminder = {
-      id: req.params.id,
-      title: req.body.title,
-      description: req.body.description,
-      completed: req.body.completed == "true"
-    }
-    database.cindy.reminders.splice(reminder.id-1, 1, reminder);
-
-    res.render('reminder/single-reminder', { reminderItem: database.cindy.reminders[reminder.id-1] })
+    let reminderToUpdate = req.params.id
+    let updateIndex = database.cindy.reminders.findIndex(function (reminder) {
+      return reminder.id == reminderToUpdate;
+    })
+    const reminders = database.cindy.reminders;
+    reminders[updateIndex].id = req.params.id;
+    reminders[updateIndex].title = req.body.title;
+    reminders[updateIndex].description = req.body.description;
+    reminders[updateIndex].completed = (req.body.completed == "true");
+    res.render('reminder/single-reminder', { reminderItem: database.cindy.reminders[updateIndex] })
   },
 
   // Delete the Reminder
   delete: (req, res) => {
-    let reminderId = req.params.id;
-    let updatedReminders = database.cindy.reminders.filter((reminder) => {
-      return reminder.id != reminderId
+    let reminderToDelete = req.params.id
+    let updateIndex = database.cindy.reminders.findIndex(function (reminder) {
+      return reminder.id == reminderToDelete;
     })
-    updatedReminders.forEach((reminder, index) => {
-      reminder.id = [index+1]
-    })
-    database.cindy.reminders = updatedReminders
+    database.cindy.reminders.splice(updateIndex, 1)
     res.redirect('/reminders')
   }
 }
