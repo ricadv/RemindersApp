@@ -6,7 +6,7 @@ let authController = {
   },
 
   register: (req, res) => {
-    res.render('auth/register')
+    res.render('auth/register', {email: req.query.email})
   },
 
   loginSubmit: (req, res) => {
