@@ -8,9 +8,9 @@
       <%= reminderItem.description %>
       || Completed:
       <% if (reminderItem.completed == true) { %>
-        <span class="label label-success">True</span>
+        <span class="badge badge-success">True</span>
       <% } else if (reminderItem.completed == false) { %>
-        <span class="label label-danger">False</span>
+        <span class="badge badge-danger">False</span>
       <% } %>
       <a class="pull-right" href=<%= "/reminder/" + reminderItem.id %>>View</a>
     </li>
