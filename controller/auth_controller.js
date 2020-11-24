@@ -10,11 +10,28 @@ let authController = {
   },
 
   loginSubmit: (req, res) => {
-    // implement
+    if (req.body.username && req.body.password) {
+      if (database[req.body.username].password == req.body.password) {
+        req.session["user"] = req.body.username
+        res.redirect("/reminders");
+      } else {
+        res.redirect("/login");
+      }
+    } else {
+      res.status(400);
+      res.send('invalid user');
+    }
   },
 
   registerSubmit: (req, res) => {
-    // implement
+    if (req.body.username && req.body.password) {
+      database[req.body.username] = {username: req.body.username, password: req.body.password, reminders: []}
+      req.session["user"] = req.body.username
+      res.redirect('/reminders');
+    } else {
+      res.status(400);
+      res.send('missing input')
+    }
   }
 }
 
