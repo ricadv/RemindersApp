@@ -2,14 +2,17 @@ let database = require("../database");
 
 let remindersController = {
   list: (req, res) => {
+    res.locals.title = "Reminders"
     res.render('reminder/index', {database: database, user: "cindy"})
   },
 
   new: (req, res) => {
+    res.locals.title = "Create"
     res.render('reminder/create')
   },
 
   listOne: (req, res) => {
+    res.locals.title = "View"
     let reminderToFind = req.params.id;
     let searchResult = database.cindy.reminders.find(function (reminder) {
       return reminder.id == reminderToFind;
@@ -22,6 +25,7 @@ let remindersController = {
   },
 
   create: (req, res) => {
+    res.locals.title = "Create"
     let reminder = {
       id: database.cindy.reminders.length + 1,
       title: req.body.title,
@@ -33,6 +37,7 @@ let remindersController = {
   },
 
   edit: (req, res) => {
+    res.locals.title = "Edit"
     let reminderToFind = req.params.id;
     let searchResult = database.cindy.reminders.find(function (reminder) {
       return reminder.id == reminderToFind;
@@ -42,6 +47,7 @@ let remindersController = {
   },
 
   update: (req, res) => {
+    res.locals.title = "Update"
     let reminderToFind = req.params.id;
     let searchResult = database.cindy.reminders.find(function (reminder) {
       if (reminder.id == reminderToFind) {
@@ -54,6 +60,7 @@ let remindersController = {
   },
 
   delete: (req, res) => {
+    res.locals.title = "Delete"
     let reminderToFind = req.params.id;
     let reminderIndex = database.cindy.reminders.findIndex(function (reminder) {
       return reminder.id == reminderToFind;

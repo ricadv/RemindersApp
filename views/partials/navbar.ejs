@@ -4,9 +4,20 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <% if (title != "Register") { %>
+      <% if (title != "Login") { %>
     <div class="navbar-nav">
-      <a class="nav-item nav-link" href="/reminders">Reminder List</a>
+      <% if (title == "Reminders") { %>
+      <a class="nav-item nav-link active" href="/reminders">Reminder List</a>
       <a class="nav-item nav-link" href="/reminder/new">Create</a>
+      <% } else if (title == "Create") { %>
+        <a class="nav-item nav-link" href="/reminders">Reminder List</a>
+        <a class="nav-item nav-link active" href="/reminder/new">Create</a>
+        <% } else { %>
+        <a class="nav-item nav-link" href="/reminders">Reminder List</a>
+        <a class="nav-item nav-link" href="/reminder/new">Create</a>
+     <% } %>
     </div>
+    <% }} %>
   </div>
 </nav>
