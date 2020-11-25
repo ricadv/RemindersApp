@@ -2,15 +2,15 @@
   <h1 class="page-header">Reminders</h1>
 
 <ul class="list-group">
-  <% reminders.forEach(function (reminderItem) { %>
+  <% database[user].reminders.forEach(function (reminderItem) { %>
     <li class="list-group-item">
       <strong><%= reminderItem.title %>: </strong>
       <%= reminderItem.description %>
       || Completed:
       <% if (reminderItem.completed == true) { %>
-        <span class="badge badge-success">True</span>
+        <span class="label label-success">True</span>
       <% } else if (reminderItem.completed == false) { %>
-        <span class="badge badge-danger">False</span>
+        <span class="label label-danger">False</span>
       <% } %>
       <a class="pull-right" href=<%= "/reminder/" + reminderItem.id %>>View</a>
     </li>
