@@ -10,16 +10,25 @@ let authController = {
   },
 
   loginSubmit: (req, res) => {
-    if (req.body.username && req.body.password) {
-      if (database[req.body.username].password == req.body.password) {
-        req.session["user"] = req.body.username
-        res.redirect("/reminders");
-      } else {
-        res.redirect("/login");
+    if (req.body.username) {
+      try{
+        if (database[req.body.username].password == req.body.password) {
+          req.session["user"] = req.body.username
+          res.redirect("/reminders");
+        } else {
+          // Wrong Password
+          req.body.warning = "badPassword"
+          res.render("auth/login", { login: req.body });
+        }
+      } catch {
+        // Email is not in database
+        req.body.warning = "noUser"
+        res.render("auth/login", { login: req.body });
       }
     } else {
-      res.status(400);
-      res.send('invalid user');
+      // No email address
+      req.body.warning = "missingEmail"
+      res.render("auth/login", { login: req.body })
     }
   },
 
@@ -32,6 +41,12 @@ let authController = {
       res.status(400);
       res.send('missing input')
     }
+  },
+
+  //logout. Simply destroy the session. 
+  logout: (req,res) => {
+    req.session = null
+    res.redirect('/');
   }
 }
 

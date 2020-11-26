@@ -42,9 +42,11 @@ app.post("/reminder/delete/:id", authCheck, reminderController.delete)
 app.get("/register", authController.register);
 
 app.get("/login", authController.login);
+
 app.post("/register", authController.registerSubmit);
 app.post("/login", authController.loginSubmit);
 
+app.post('/logout', authController.logout);
 
 app.listen(3001, function () {
   console.log("Server running. Visit: localhost:3001/reminders in your browser 🚀");
