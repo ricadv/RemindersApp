@@ -28,7 +28,7 @@ app.get("/reminders", authCheck, reminderController.list)
 
 app.get("/reminder/new", authCheck, reminderController.new)
 
-app.get("/reminder/:id", authCheck, reminderController.listOne)
+app.get("/reminder/:username/:id", authCheck, reminderController.listOne)
 
 app.get("/reminder/:id/edit", authCheck, reminderController.edit)
 
