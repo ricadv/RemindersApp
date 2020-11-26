@@ -33,16 +33,18 @@
     </div>
     <button type="button" class="btn btn-outline-primary" id="subtask-button">Add Subtask</button>
 
-    <div class="form-group my-3" id="tag-container" style="width: 30%">
+    <div class="form-group my-3" id="tag-container">
       <label for="tags"><b>Tags</b></label>
-      <% reminderItem.tags.forEach((tag, index) => { %>
-      <div class="input-group mb-3 tag" id=<%= "tagDiv-" + index %>>
-      <input type="text" class="form-control" id=<%= "tagInput-" + index%> placeholder="Tag" name=<%= "tag-" + index %> value=<%= tag %>>
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button" id=<%= "removeTag-" + index %>>X</button>
+      <div class="row" id="tag-row">
+        <% reminderItem.tags.forEach((tag, index) => { %>
+        <div class="input-group col-3 mb-3 tag" id=<%= "tagDiv-" + index %>>
+        <input type="text" class="form-control" id=<%= "tagInput-" + index%> placeholder="Tag" name=<%= "tag-" + index %> value=<%= tag %>>
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id=<%= "removeTag-" + index %>>X</button>
+          </div>
         </div>
+        <% }) %>
       </div>
-      <% }) %>
     </div>
     <button type="button" class="btn btn-outline-primary" id="tag-button">Add Tag</button>
 
@@ -96,10 +98,10 @@
     subtaskContainer.append(subtask)
   }
   document.getElementById("tag-button").onclick = () => {
-    let tagContainer = document.getElementById("tag-container");
+    let tagContainer = document.getElementById("tag-row");
     let tagCount = document.getElementsByClassName("input-group mb-3 tag").length
     let tag = document.createElement("div")
-    tag.className = "input-group mb-3 tag"
+    tag.className = "input-group col-3 mb-3 tag"
     tag.id = `tagDiv-${tagCount}`
     tag.innerHTML =
         `<input type="text" class="form-control" id="tagInput-${tagCount}" placeholder="Tag" name="tag-${tagCount}">
@@ -119,7 +121,7 @@
       let tagIndex = event.target.id.split("-")
       let tagDivId = "tagDiv-" + tagIndex[1]
       let removedTag = document.getElementById(tagDivId)
-      document.getElementById("tag-container").removeChild(removedTag)
+      document.getElementById("tag-row").removeChild(removedTag)
     }
   })
 </script>

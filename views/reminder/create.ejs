@@ -11,21 +11,23 @@
 
     <div class="form-group" id="subtask-container">
       <label for="subtasks">Subtasks</label>
-      <div class="input-group mb-3 subtask" id="subtaskDiv-1">
-        <input type="text" class="form-control" id="subtaskInput-1" placeholder="Subtask" name="subtask-1">
+      <div class="input-group mb-3 subtask" id="subtaskDiv-0">
+        <input type="text" class="form-control" id="subtaskInput-0" placeholder="Subtask" name="subtask-0">
         <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button" id="removeSubtask-1">X</button>
+          <button class="btn btn-outline-secondary" type="button" id="removeSubtask-0">X</button>
         </div>
       </div>
     </div>
     <button type="button" class="btn btn-outline-primary" id="subtask-button">Add Subtask</button>
 
-    <div class="form-group my-3" id="tag-container" style="width: 30%">
+    <div class="form-group my-3" id="tag-container">
       <label for="tags">Tags</label>
-      <div class="input-group mb-3 tag" id="tagDiv-1">
-      <input type="text" class="form-control" id="tagInput-1" placeholder="Tag" name="tag-1">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button" id="removeTag-1">X</button>
+      <div class="row" id="tag-row">
+        <div class="input-group col-3 mb-3 tag" id="tagDiv-0">
+        <input type="text" class="form-control" id="tagInput-0" placeholder="Tag" name="tag-0">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id="removeTag-0">X</button>
+          </div>
         </div>
       </div>
     </div>
@@ -43,24 +45,24 @@
     let subtaskCount = document.getElementsByClassName("input-group mb-3 subtask").length
     let subtask = document.createElement("div")
     subtask.className = "input-group mb-3 subtask"
-    subtask.id = `subtaskDiv-${subtaskCount +1}`
+    subtask.id = `subtaskDiv-${subtaskCount}`
     subtask.innerHTML =
-        `<input type="text" class="form-control" id="subtaskInput-${subtaskCount + 1}" placeholder="Subtask" name="subtask-${subtaskCount + 1}">
+        `<input type="text" class="form-control" id="subtaskInput-${subtaskCount}" placeholder="Subtask" name="subtask-${subtaskCount}">
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" id="removeSubtask-${subtaskCount + 1}">X</button>
+            <button class="btn btn-outline-secondary" type="button" id="removeSubtask-${subtaskCount}">X</button>
           </div>`
     subtaskContainer.append(subtask)
   }
   document.getElementById("tag-button").onclick = () => {
-    let tagContainer = document.getElementById("tag-container");
+    let tagContainer = document.getElementById("tag-row");
     let tagCount = document.getElementsByClassName("input-group mb-3 tag").length
     let tag = document.createElement("div")
-    tag.className = "input-group mb-3 tag"
-    tag.id = `tagDiv-${tagCount +1}`
+    tag.className = "input-group col-3 mb-3 tag"
+    tag.id = `tagDiv-${tagCount}`
     tag.innerHTML =
-        `<input type="text" class="form-control" id="tagInput-${tagCount + 1}" placeholder="Tag" name="tag-${tagCount + 1}">
+        `<input type="text" class="form-control" id="tagInput-${tagCount}" placeholder="Tag" name="tag-${tagCount}">
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" id="removeTag-${tagCount + 1}">X</button>
+            <button class="btn btn-outline-secondary" type="button" id="removeTag-${tagCount}">X</button>
           </div>`
     tagContainer.append(tag)
   }
