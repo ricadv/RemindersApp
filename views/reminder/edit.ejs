@@ -15,6 +15,15 @@
       <label for="subtasks"><b>Subtasks</b></label>
       <% reminderItem.subtasks.forEach((subtask, index) => { %>
       <div class="input-group mb-3 subtask" id=<%= "subtaskDiv-" + index %>>
+        <div class="input-group-prepend">
+          <div class="input-group-text">
+            <% if (subtask.completed) { %>
+              <input type="checkbox" aria-label="Checkbox for following text input" name=<%= "subCompleted-" + index %> value="true" checked>
+            <% } else { %>
+              <input type="checkbox" aria-label="Checkbox for following text input" name=<%= "subCompleted-" + index %> value="true">
+            <% } %>
+          </div>
+        </div>
         <input type="text" class="form-control" id=<%= "subtaskInput-" + index %> placeholder="Subtask" name=<%= "subtask-" + index %> value="<%= subtask.description %>"> 
         <div class="input-group-append">
           <button class="btn btn-outline-secondary" type="button" id=<%= "removeSubtask-" + index %>>X</button>
@@ -73,12 +82,17 @@
     let subtaskCount = document.getElementsByClassName("input-group mb-3 subtask").length
     let subtask = document.createElement("div")
     subtask.className = "input-group mb-3 subtask"
-    subtask.id = `subtaskDiv-${subtaskCount +1}`
+    subtask.id = `subtaskDiv-${subtaskCount}`
     subtask.innerHTML =
-        `<input type="text" class="form-control" id="subtaskInput-${subtaskCount + 1}" placeholder="Subtask" name="subtask-${subtaskCount + 1}">
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" id="removeSubtask-${subtaskCount + 1}">X</button>
-          </div>`
+        `<div class="input-group-prepend">
+          <div class="input-group-text">
+              <input type="checkbox" aria-label="Checkbox for following text input" name="subCompleted-${subtaskCount}" value="true">
+          </div>
+        </div>
+        <input type="text" class="form-control" id="subtaskInput-${subtaskCount}" placeholder="Subtask" name="subtask-${subtaskCount}">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" id="removeSubtask-${subtaskCount}">X</button>
+        </div>`
     subtaskContainer.append(subtask)
   }
   document.getElementById("tag-button").onclick = () => {
@@ -86,11 +100,11 @@
     let tagCount = document.getElementsByClassName("input-group mb-3 tag").length
     let tag = document.createElement("div")
     tag.className = "input-group mb-3 tag"
-    tag.id = `tagDiv-${tagCount +1}`
+    tag.id = `tagDiv-${tagCount}`
     tag.innerHTML =
-        `<input type="text" class="form-control" id="tagInput-${tagCount + 1}" placeholder="Tag" name="tag-${tagCount + 1}">
+        `<input type="text" class="form-control" id="tagInput-${tagCount}" placeholder="Tag" name="tag-${tagCount}">
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" id="removeTag-${tagCount + 1}">X</button>
+            <button class="btn btn-outline-secondary" type="button" id="removeTag-${tagCount}">X</button>
           </div>`
     tagContainer.append(tag)
   }
