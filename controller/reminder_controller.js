@@ -2,12 +2,8 @@ let database = require("../database");
 
 let remindersController = {
   list: (req, res) => {
-<<<<<<< HEAD
-    res.render('reminder/index', {database: database, user: "cindy"})
-=======
     res.locals.page = "list"
     res.render('reminder/index', { reminders: req.user.reminders })
->>>>>>> 74ba6bec49c1230df888f5d5f74371828914b926
   },
 
   new: (req, res) => {
