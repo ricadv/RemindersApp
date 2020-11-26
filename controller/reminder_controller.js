@@ -39,15 +39,14 @@ let remindersController = {
       }
     }
     let reminder = {
-      id: database.cindy.reminders.length + 1,
+      id: req.user.reminders.length + 1,
       title: req.body.title,
       description: req.body.description,
       completed: false,
       subtasks: subtasks,
       tags: tags
     }
-    database.cindy.reminders.push(reminder);
-    console.log(database.cindy.reminders)
+    database[req.user.email].reminders.push(reminder);
     res.redirect('/reminders');
   },
 
@@ -61,12 +60,26 @@ let remindersController = {
   },
 
   update: (req, res) => {
+    let subtasks = []
+    for (let [item,value] of Object.entries(req.body)) {
+      if (item.includes("subtask")) {
+        subtasks.push({description: value, completed: false})
+      }
+    }
+    let tags = []
+    for (let [item,value] of Object.entries(req.body)) {
+      if (item.includes("tag")) {
+        tags.push(value)
+      }
+    }
     let reminderToFind = req.params.id;
-    let searchResult = database[req.user.username].reminders.find(function (reminder) {
+    let searchResult = database[req.user.email].reminders.find(function (reminder) {
       if (reminder.id == reminderToFind) {
-          reminder.title = req.body.title,
-          reminder.description = req.body.description,
-          reminder.completed = req.body.completed == "true"
+        reminder.title = req.body.title,
+        reminder.description = req.body.description,
+        reminder.completed = req.body.completed == "true",
+        reminder.subtasks = subtasks,
+        reminder.tags = tags
       }
     });
     res.redirect('/reminder/' + reminderToFind)
@@ -77,7 +90,7 @@ let remindersController = {
     let reminderIndex = req.user.reminders.findIndex(function (reminder) {
       return reminder.id == reminderToFind;
     })
-    database[req.user.username].reminders.splice(reminderIndex, 1);
+    database[req.user.email].reminders.splice(reminderIndex, 1);
     res.redirect('/reminders');
   }
 }
