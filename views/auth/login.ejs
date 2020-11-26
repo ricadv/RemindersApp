@@ -5,16 +5,16 @@
         <label for="exampleInputEmail1">Email address</label>
         <% try { %>
           <% login.warning %>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="username" value=<%= login.username %>>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email" value=<%= login.email %>>
           <% } catch { %>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="username">
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email">
         <% } %>
           <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
         <% try { %>
           <% if (login.warning == "noUser") { %>
-            <small id="usernameMessage" class="form-text text-danger">Email is not a registered user</small>
+            <small id="emailMessage" class="form-text text-danger">Email is not registered.<a href="/register">Click here to register</a></small>
           <% } else if (login.warning == "missingEmail") { %>
-            <small id="passwordMessage" class="form-text text-danger">Please enter an email</small>
+            <small id="passwordMessage" class="form-text text-danger">Please enter an email.</small>
           <% } %>
         <% } catch {} %>
       </div>
@@ -23,7 +23,9 @@
         <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
         <% try { %>
           <% if (login.warning == "badPassword") { %>
-            <small id="passwordMessage" class="form-text text-danger">Password does not match email address</small>
+            <small id="passwordMessage" class="form-text text-danger">Incorrect password.</small>
+          <% } else if (login.warning == "missingEmail") { %>
+            <small id="passwordMessage" class="form-text text-danger">Please enter a password.</small>
           <% } %>
         <% } catch {} %>
       </div>

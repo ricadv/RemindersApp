@@ -2,28 +2,32 @@ let database = require("../database");
 
 let authController = {
   login: (req, res) => {
-    res.locals.title = "login"
+    res.locals.page = "login"
     res.render('auth/login')
   },
 
   register: (req, res) => {
-    res.locals.title = "register"
-    res.render('auth/register')
+    res.locals.page = "register"
+    res.render('auth/register', { email: req.query.email })
   },
 
   loginSubmit: (req, res) => {
-    if (req.body.username) {
-      try{
-        if (database[req.body.username].password == req.body.password) {
-          req.session["user"] = req.body.username
+    res.locals.page = "login"
+    // Both fields completed
+    if (req.body.email && req.body.password) {
+      // Email is in database
+      if (req.body.email == Object.keys(database).find(key => key == [req.body.email])) {
+        // Password is correct
+        if (database[req.body.email].password == req.body.password) {
+          req.session["user"] = req.body.email
           res.redirect("/reminders");
+        // Wrong Password
         } else {
-          // Wrong Password
           req.body.warning = "badPassword"
           res.render("auth/login", { login: req.body });
         }
-      } catch {
-        // Email is not in database
+      // Email is not in database
+      } else {
         req.body.warning = "noUser"
         res.render("auth/login", { login: req.body });
       }
@@ -35,13 +39,29 @@ let authController = {
   },
 
   registerSubmit: (req, res) => {
-    if (req.body.username && req.body.password) {
-      database[req.body.username] = {username: req.body.username, password: req.body.password, reminders: []}
-      req.session["user"] = req.body.username
-      res.redirect('/reminders');
+    res.locals.page = "register"
+    // All 3 fields completed
+    if (req.body.email && req.body.password && req.body.confirmation) {
+      // Email is not in database
+      if (req.body.email != Object.keys(database).find(key => key == [req.body.email])) {
+        // Password matches confirmation
+        if (req.body.password == req.body.confirmation) {
+          database[req.body.email] = {email: req.body.email, password: req.body.password, reminders: []}
+          req.session["user"] = req.body.email
+          res.redirect('/reminders');
+        // Password does not match confirmation
+        } else {
+          req.body.warning = "badPassword"
+          res.render("auth/register", { register: req.body });
+        }
+      // Email is already in database
+      } else {
+        req.body.warning = "registered"
+        res.render("auth/register", { register: req.body });
+      }
     } else {
-      res.status(400);
-      res.send('missing input')
+      req.body.warning = "missingEmail"
+      res.render("auth/register", { register: req.body });
     }
   },
 
