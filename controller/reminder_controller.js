@@ -62,8 +62,10 @@ let remindersController = {
   update: (req, res) => {
     let subtasks = []
     for (let [item,value] of Object.entries(req.body)) {
-      if (item.includes("subtask") && value != "") {
-        subtasks.push({description: value, completed: false})
+      console.log(item, value)
+      if (item.includes("subtask") && (value != "")) {
+        let index = item.split("-")[1]
+        subtasks.push({description: value, completed: req.body["subCompleted-" + index] == "true"})
       }
     }
     let tags = []
