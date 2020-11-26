@@ -8,6 +8,76 @@
       <label for="description">Description</label>
       <textarea class="form-control" id="descriptionInput" rows="3" placeholder="Description" name="description"></textarea>
     </div>
-    <button type="submit" class="btn btn-default">Submit</button>
+
+    <div class="form-group" id="subtask-container">
+      <label for="subtasks">Subtasks</label>
+      <div class="input-group mb-3 subtask" id="subtaskDiv-0">
+        <input type="text" class="form-control" id="subtaskInput-0" placeholder="Subtask" name="subtask-0">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" id="removeSubtask-0">X</button>
+        </div>
+      </div>
+    </div>
+    <button type="button" class="btn btn-outline-primary" id="subtask-button">Add Subtask</button>
+
+    <div class="form-group my-3" id="tag-container">
+      <label for="tags">Tags</label>
+      <div class="row" id="tag-row">
+        <div class="input-group col-3 mb-3 tag" id="tagDiv-0">
+        <input type="text" class="form-control" id="tagInput-0" placeholder="Tag" name="tag-0">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id="removeTag-0">X</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button type="button" class="btn btn-outline-primary" id="tag-button">Add Tag</button>
+
+    <div class="form-group my-3">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
   </form>
 </div>
+
+<script>
+  document.getElementById("subtask-button").onclick = () => {
+    let subtaskContainer = document.getElementById("subtask-container");
+    let subtaskCount = document.getElementsByClassName("input-group mb-3 subtask").length
+    let subtask = document.createElement("div")
+    subtask.className = "input-group mb-3 subtask"
+    subtask.id = `subtaskDiv-${subtaskCount}`
+    subtask.innerHTML =
+        `<input type="text" class="form-control" id="subtaskInput-${subtaskCount}" placeholder="Subtask" name="subtask-${subtaskCount}">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id="removeSubtask-${subtaskCount}">X</button>
+          </div>`
+    subtaskContainer.append(subtask)
+  }
+  document.getElementById("tag-button").onclick = () => {
+    let tagContainer = document.getElementById("tag-row");
+    let tagCount = document.getElementsByClassName("input-group mb-3 tag").length
+    let tag = document.createElement("div")
+    tag.className = "input-group col-3 mb-3 tag"
+    tag.id = `tagDiv-${tagCount}`
+    tag.innerHTML =
+        `<input type="text" class="form-control" id="tagInput-${tagCount}" placeholder="Tag" name="tag-${tagCount}">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id="removeTag-${tagCount}">X</button>
+          </div>`
+    tagContainer.append(tag)
+  }
+  document.addEventListener("click", function() {
+    if (event.target.id.includes("removeSubtask")) {
+      let subtaskIndex = event.target.id.split("-")
+      let subtaskDivId = "subtaskDiv-" + subtaskIndex[1]
+      let removedSubtask = document.getElementById(subtaskDivId)
+      document.getElementById("subtask-container").removeChild(removedSubtask)
+    }
+    if (event.target.id.includes("removeTag")) {
+      let tagIndex = event.target.id.split("-")
+      let tagDivId = "tagDiv-" + tagIndex[1]
+      let removedTag = document.getElementById(tagDivId)
+      document.getElementById("tag-container").removeChild(removedTag)
+    }
+  })
+</script>

@@ -1,11 +1,18 @@
 const express = require("express");
-const app = express();
+const cookieSession = require('cookie-session')
 const path = require("path");
 const ejsLayouts = require("express-ejs-layouts");
 const reminderController = require("./controller/reminder_controller");
 const authController = require("./controller/auth_controller");
+const authCheck = require("./middleware/auth")
 
+const app = express();
 
+app.use(cookieSession({
+  name: "session",
+  keys: ["abc", "def", "ghi"],
+  maxAge: 10*24*3600*1000
+}));
 
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -17,26 +24,29 @@ app.set("view engine", "ejs");
 
 // Routes start here
 
-app.get("/reminders", reminderController.list)
+app.get("/reminders", authCheck, reminderController.list)
 
-app.get("/reminder/new", reminderController.new)
+app.get("/reminder/new", authCheck, reminderController.new)
 
-app.get("/reminder/:id", reminderController.listOne)
+app.get("/reminder/:id", authCheck, reminderController.listOne)
 
-app.get("/reminder/:id/edit", reminderController.edit)
+app.get("/reminder/:id/edit", authCheck, reminderController.edit)
 
-app.post("/reminder/", reminderController.create)
+app.post("/reminder/", authCheck, reminderController.create)
 
-app.post("/reminder/update/:id", reminderController.update)
+app.post("/reminder/update/:id", authCheck, reminderController.update)
 
-app.post("/reminder/delete/:id", reminderController.delete)
+app.post("/reminder/delete/:id", authCheck, reminderController.delete)
 
 
 app.get("/register", authController.register);
+
 app.get("/login", authController.login);
+
 app.post("/register", authController.registerSubmit);
 app.post("/login", authController.loginSubmit);
 
+app.post('/logout', authController.logout);
 
 app.listen(3001, function () {
   console.log("Server running. Visit: localhost:3001/reminders in your browser 🚀");

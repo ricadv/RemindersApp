@@ -1,12 +1,29 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="/reminders">Reminder List</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+
+  <button class="navbar-toggler ml-auto mx-2" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
+
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
-      <a class="nav-item nav-link" href="/reminders">Reminder List</a>
-      <a class="nav-item nav-link" href="/reminder/new">Create</a>
+      <% if (locals.page == "list") { %>
+        <a class="nav-item nav-link active" href="/reminders">Reminder List</a>
+        <a class="nav-item nav-link" href="/reminder/new">Create</a>
+      <% } else if (locals.page == "create") { %>
+        <a class="nav-item nav-link" href="/reminders">Reminder List</a>
+        <a class="nav-item nav-link active" href="/reminder/new">Create</a>
+      <% } else if (locals.page != "register" && locals.page != "login") { %>
+        <a class="nav-item nav-link" href="/reminders">Reminder List</a>
+        <a class="nav-item nav-link" href="/reminder/new">Create</a>
+      <% } %>
     </div>
   </div>
+
+  <% if (locals.page != "login" && locals.page != "register") { %>
+    <form action ="/logout" method="POST">
+      <button class="btn btn-outline-danger ml-auto" type="submit">Logout</button>
+    </form>
+  <% } %>
+
 </nav>
