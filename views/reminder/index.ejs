@@ -12,7 +12,7 @@
         <% } else if (reminderItem.completed == false) { %>
           <span class="badge badge-danger">False</span>
         <% } %>
-        <a class="pull-right" href=<%= "/reminder/" + reminders[0].friend + "/" + reminderItem.id %>>View</a>
+        <a class="pull-right" href=<%= "/reminder/" + reminders[0].friend + "&" + reminderItem.id %>>View</a>
       </li>
     <% }) %>
   </ul>
@@ -35,7 +35,7 @@
           <% } else if (reminderItem.completed == false) { %>
             <span class="badge badge-danger">False</span>
           <% } %>
-          <a class="pull-right" href=<%= "/reminder/" + reminder.friend + "/" + reminderItem.id %>>View</a>
+          <a class="pull-right" href=<%= "/reminder/" + reminder.friend + "&" + reminderItem.id %>>View</a>
         </li>
       <% }) %>
     </ul>
