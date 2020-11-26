@@ -3,15 +3,47 @@
 
     <ul class="list-group">
       <li class="list-group-item">
-        <h3><strong><%= reminderItem.title %>: </strong></h3>
-        <h4><%= reminderItem.description %></h4>
-        <h4>Completed:
-          <% if (reminderItem.completed == true) { %>
-            <span class="label label-success">True</span>
-          <% } else if (reminderItem.completed == false) { %>
-            <span class="label label-danger">False</span>
-          <% } %>
-        </h4>
+        
+        <div class="container">
+          <div class="row justify-content-md-center">
+            <div class="col">
+              <h3 class="mb-2"><strong><%= reminderItem.title %>: </strong></h3>
+            </div>
+            <div class="col-sm-auto">
+              <h3>
+                <% if (reminderItem.completed == true) { %>
+                  <span class="badge badge-success my-2">Complete</span>
+                <% } else if (reminderItem.completed == false) { %>
+                  <span class="badge badge-danger my-2">Incomplete</span>
+                <% } %>
+              </h3>
+          </div>
+        </div>
+
+        <div class="container px-0">
+        <% for (tag of reminderItem.tags) { %>
+          <button type="button" class="btn btn-outline-primary mr-2 py-0"><%= tag %></button>
+        <% } %>
+        </div>
+
+        <h5 class="my-4 ml-1"><%= reminderItem.description %></h5>
+
+        <% for (subtask of reminderItem.subtasks) { %>
+          <div class="card border-primary my-4">
+            <div class="card-body">
+              <div class="form-check">
+                <% if (subtask.completed) { %>
+                  <input class="form-check-input" type="checkbox" value="true" checked="checked" onclick="return false">
+                <% } else { %>
+                  <input class="form-check-input" type="checkbox" value="false" onclick="return false">
+                <% } %>
+                <label class="form-check-label" for="defaultCheck1">
+                <h5><%= subtask.description %></h5>
+                </label>
+              </div>
+            </div>
+          </div>
+        <% } %>
 
         <a class="btn btn-warning" href=<%= "/reminder/" + reminderItem.id + "/edit" %>>Edit</a>
 
