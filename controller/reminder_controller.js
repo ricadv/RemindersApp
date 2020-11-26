@@ -25,13 +25,29 @@ let remindersController = {
   },
 
   create: (req, res) => {
+    console.log(req.body)
+    let subtasks = []
+    for (let [item,value] of Object.entries(req.body)) {
+      if (item.includes("subtask") && value != "") {
+        subtasks.push({description: value, completed: false})
+      }
+    }
+    let tags = []
+    for (let [item,value] of Object.entries(req.body)) {
+      if (item.includes("tag") && value != "") {
+        tags.push(value)
+      }
+    }
     let reminder = {
-      id: req.user.reminders.length + 1,
+      id: database.cindy.reminders.length + 1,
       title: req.body.title,
       description: req.body.description,
-      completed: false
+      completed: false,
+      subtasks: subtasks,
+      tags: tags
     }
-    database[req.user.username].reminders.push(reminder);
+    database.cindy.reminders.push(reminder);
+    console.log(database.cindy.reminders)
     res.redirect('/reminders');
   },
 
