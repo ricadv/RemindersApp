@@ -3,7 +3,13 @@ let database = require("../database");
 let remindersController = {
   list: (req, res) => {
     res.locals.page = "list"
-    res.render('reminder/index', { reminders: req.user.reminders })
+    let allReminders = [{ friend: req.user.email, reminders: req.user.reminders }]
+    let friendsList = database[req.user.email].friends
+    friendsList.forEach((friend) => {
+      allReminders.push({ friend: friend, reminders: database[friend].reminders })
+    })
+    console.log(allReminders)
+    res.render('reminder/index', { reminders: allReminders })
   },
 
   new: (req, res) => {
@@ -12,9 +18,16 @@ let remindersController = {
   },
 
   listOne: (req, res) => {
-    console.log(req.user)
+    if (req.user.email == req.params.username) {
+      res.locals.id = "user"
+    }
+    let userToFind = req.params.username
+    let userFriend = Object.keys(database).find(function (username) {
+      return username == userToFind;
+    })
+
     let reminderToFind = req.params.id;
-    let searchResult = req.user.reminders.find(function (reminder) {
+    let searchResult = database[userFriend].reminders.find(function (reminder) {
       return reminder.id == reminderToFind;
     })
     if (searchResult != undefined) {

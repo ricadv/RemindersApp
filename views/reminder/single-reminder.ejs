@@ -45,12 +45,12 @@
           </div>
         <% } %>
 
-        <a class="btn btn-warning" href=<%= "/reminder/" + reminderItem.id + "/edit" %>>Edit</a>
-
+        <% if (locals.id == "user") { %>
+        <a class="btn btn-warning" h5ref=<%= "/reminder/" + reminderItem.id + "/edit" %>>Edit</a>
         <form class="deleteForm "method="POST" action=<%= "/reminder/delete/" + reminderItem.id %>>
           <button type="submit" class="btn btn-danger">Delete</button>
         </form>
-
+        <% } %>
       </li>
     </ul>
 
