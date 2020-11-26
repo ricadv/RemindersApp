@@ -2,16 +2,43 @@
   <h1 class="page-header">Edit</h1>
   <form action=<%= "/reminder/update/" + reminderItem.id %> method="POST">
     <div class="form-group">
-      <label for="title">Title</label>
+      <label for="title"><b>Title</b></label>
       <input type="text" name="title" class="form-control" id="titleInput" value="<%= reminderItem.title %>">
     </div>
+    
     <div class="form-group">
-      <label for="description">Description</label>
+      <label for="description"><b>Description</b></label>
       <textarea class="form-control" id="descriptionInput" rows="3" placeholder="Description" name="description"><%= reminderItem.description %></textarea>
     </div>
+    
+    <div class="form-group" id="subtask-container">
+      <label for="subtasks"><b>Subtasks</b></label>
+      <% reminderItem.subtasks.forEach((subtask, index) => { %>
+      <div class="input-group mb-3 subtask" id=<%= "subtaskDiv-" + index %>>
+        <input type="text" class="form-control" id=<%= "subtaskInput-" + index %> placeholder="Subtask" name=<%= "subtask-" + index %> value="<%= subtask.description %>"> 
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" id=<%= "removeSubtask-" + index %>>X</button>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <button type="button" class="btn btn-outline-primary" id="subtask-button">Add Subtask</button>
 
-    <div class="form-group">
-      <label for="completed">Completed</label>
+    <div class="form-group my-3" id="tag-container" style="width: 30%">
+      <label for="tags"><b>Tags</b></label>
+      <% reminderItem.tags.forEach((tag, index) => { %>
+      <div class="input-group mb-3 tag" id=<%= "tagDiv-" + index %>>
+      <input type="text" class="form-control" id=<%= "tagInput-" + index%> placeholder="Tag" name=<%= "tag-" + index %> value=<%= tag %>>
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" id=<%= "removeTag-" + index %>>X</button>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <button type="button" class="btn btn-outline-primary" id="tag-button">Add Tag</button>
+
+    <div class="form-group my-3">
+      <label for="completed"><b>Completed</b></label>
       <div class="radio">
         <label>
           <% if (reminderItem.completed == true) { %>
@@ -33,6 +60,52 @@
         </label>
       </div>
     </div>
-    <button type="submit" class="btn btn-default">Submit</button>
+    
+    <div class="form-group my-3">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
   </form>
 </div>
+
+<script>
+  document.getElementById("subtask-button").onclick = () => {
+    let subtaskContainer = document.getElementById("subtask-container");
+    let subtaskCount = document.getElementsByClassName("input-group mb-3 subtask").length
+    let subtask = document.createElement("div")
+    subtask.className = "input-group mb-3 subtask"
+    subtask.id = `subtaskDiv-${subtaskCount +1}`
+    subtask.innerHTML =
+        `<input type="text" class="form-control" id="subtaskInput-${subtaskCount + 1}" placeholder="Subtask" name="subtask-${subtaskCount + 1}">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id="removeSubtask-${subtaskCount + 1}">X</button>
+          </div>`
+    subtaskContainer.append(subtask)
+  }
+  document.getElementById("tag-button").onclick = () => {
+    let tagContainer = document.getElementById("tag-container");
+    let tagCount = document.getElementsByClassName("input-group mb-3 tag").length
+    let tag = document.createElement("div")
+    tag.className = "input-group mb-3 tag"
+    tag.id = `tagDiv-${tagCount +1}`
+    tag.innerHTML =
+        `<input type="text" class="form-control" id="tagInput-${tagCount + 1}" placeholder="Tag" name="tag-${tagCount + 1}">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id="removeTag-${tagCount + 1}">X</button>
+          </div>`
+    tagContainer.append(tag)
+  }
+  document.addEventListener("click", function() {
+    if (event.target.id.includes("removeSubtask")) {
+      let subtaskIndex = event.target.id.split("-")
+      let subtaskDivId = "subtaskDiv-" + subtaskIndex[1]
+      let removedSubtask = document.getElementById(subtaskDivId)
+      document.getElementById("subtask-container").removeChild(removedSubtask)
+    }
+    if (event.target.id.includes("removeTag")) {
+      let tagIndex = event.target.id.split("-")
+      let tagDivId = "tagDiv-" + tagIndex[1]
+      let removedTag = document.getElementById(tagDivId)
+      document.getElementById("tag-container").removeChild(removedTag)
+    }
+  })
+</script>
