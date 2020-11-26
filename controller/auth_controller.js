@@ -2,12 +2,12 @@ let database = require("../database");
 
 let authController = {
   login: (req, res) => {
-    res.locals.title = "Login"
+    res.locals.title = "login"
     res.render('auth/login')
   },
 
   register: (req, res) => {
-    res.locals.title = "Register"
+    res.locals.title = "register"
     res.render('auth/register')
   },
 

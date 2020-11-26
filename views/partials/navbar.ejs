@@ -7,13 +7,24 @@
 
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
-      <a class="nav-item nav-link" href="/reminders">Reminder List</a>
-      <a class="nav-item nav-link" href="/reminder/new">Create</a>
+      <% if (locals.page != "register")
+      <% if (locals.page == "list") { %>
+        <a class="nav-item nav-link active" href="/reminders">Reminder List</a>
+        <a class="nav-item nav-link" href="/reminder/new">Create</a>
+      <% } else if (locals.page == "create") { %>
+        <a class="nav-item nav-link" href="/reminders">Reminder List</a>
+        <a class="nav-item nav-link active" href="/reminder/new">Create</a>
+      <% } else { %>
+        <a class="nav-item nav-link" href="/reminders">Reminder List</a>
+        <a class="nav-item nav-link" href="/reminder/new">Create</a>
+      <% } %>
     </div>
   </div>
 
-  <form action ="/logout" method="POST">
-    <button class="btn btn-outline-danger ml-auto my-2" type="submit">Logout</button>
-  </form>
+  <% if (locals.page != "login") { %>
+    <form action ="/logout" method="POST">
+      <button class="btn btn-outline-danger ml-auto my-2" type="submit">Logout</button>
+    </form>
+  <% } %>
 
 </nav>
