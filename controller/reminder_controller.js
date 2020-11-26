@@ -3,7 +3,12 @@ let database = require("../database");
 let remindersController = {
   list: (req, res) => {
     res.locals.page = "list"
-    res.render('reminder/index', { reminders: req.user.reminders })
+    let allReminders = [req.user.reminders]
+    database[req.user.friends].forEach((friend) => {
+      allReminders.push(database[friend.reminders])
+    })
+    res.render('reminder/index', { reminders: allReminders })
+    // res.render('reminder/index', { reminders: req.user.reminders })
   },
 
   new: (req, res) => {
