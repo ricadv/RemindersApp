@@ -46,7 +46,7 @@ let authController = {
       if (req.body.email != Object.keys(database).find(key => key == [req.body.email])) {
         // Password matches confirmation
         if (req.body.password == req.body.confirmation) {
-          database[req.body.email] = {email: req.body.email, password: req.body.password, reminders: []}
+          database[req.body.email] = {email: req.body.email, password: req.body.password, reminders: [], friends: []}
           req.session["user"] = req.body.email
           res.redirect('/reminders');
         // Password does not match confirmation

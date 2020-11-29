@@ -22,7 +22,7 @@
       <input type="password" class="form-control" id="inputPassword" placeholder="Password" name="password">
       <% try { %>
         <% if (register.warning == "badPassword") { %>
-          <small id="passwordMessage" class="form-text text-danger">Password does not confirmation.</small>
+          <small id="passwordMessage" class="form-text text-danger">Password does not match confirmation.</small>
         <% } else if (register.warning == "missingEmail") { %>
           <small id="passwordMessage" class="form-text text-danger">Please enter a password.</small>
         <% } %>
@@ -32,7 +32,9 @@
       <label for="exampleInputPassword1">Confirm Password</label>
       <input type="password" class="form-control" id="inputConfirmation" placeholder="Re-enter Password" name="confirmation">
       <% try { %>
-        <% if (register.warning == "missingEmail") { %>
+        <% if (register.warning == "badPassword") { %>
+          <small id="passwordMessage" class="form-text text-danger">Password does not match confirmation.</small>
+        <% } else if (register.warning == "missingEmail") { %>
           <small id="passwordMessage" class="form-text text-danger">Please confirm password.</small>
         <% } %>
       <% } catch {} %>
