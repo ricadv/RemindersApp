@@ -97,7 +97,7 @@ let remindersController = {
         reminder.tags = tags
       }
     });
-    res.redirect('/reminder/' + reminderToFind)
+    res.redirect('/reminder/' + database[req.user.email].email + "&" + reminderToFind)
   },
 
   delete: (req, res) => {
