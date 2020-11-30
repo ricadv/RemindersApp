@@ -3,8 +3,10 @@ const cookieSession = require('cookie-session')
 const path = require("path");
 const ejsLayouts = require("express-ejs-layouts");
 const reminderController = require("./controller/reminder_controller");
+const friendController = require("./controller/friend_controller");
 const authController = require("./controller/auth_controller");
 const authCheck = require("./middleware/auth")
+const exitCheck = require("./middleware/exit")
 
 const app = express();
 
@@ -38,12 +40,16 @@ app.post("/reminder/update/:id", authCheck, reminderController.update)
 
 app.post("/reminder/delete/:id", authCheck, reminderController.delete)
 
+app.get("/friends", authCheck, friendController.list)
 
-app.get("/register", authController.register);
+app.post("/friends", authCheck, friendController.update)
 
-app.get("/login", authController.login);
+app.get("/register", exitCheck, authController.register);
+
+app.get("/login", exitCheck, authController.login);
 
 app.post("/register", authController.registerSubmit);
+
 app.post("/login", authController.loginSubmit);
 
 app.post('/logout', authController.logout);

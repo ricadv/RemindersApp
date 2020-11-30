@@ -46,6 +46,13 @@
                       let email = document.getElementById("email-input").value;
                       location.href = "/register?email=" + email;
                     }
+                    document.getElementById("email-input").addEventListener("keydown", function(event) {
+                      if (event.keyCode == 13) {
+                        event.preventDefault();
+                        let email = document.getElementById("email-input").value;
+                        location.href = "/register?email=" + email;
+                      }
+                    })
                   </script>
 
                 </div>
