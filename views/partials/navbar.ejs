@@ -9,13 +9,18 @@
     <div class="navbar-nav">
       <% if (locals.page == "list") { %>
         <a class="nav-item nav-link active" href="/reminders">Reminder List</a>
-        <a class="nav-item nav-link" href="/reminder/new">Create</a>
-      <% } else if (locals.page == "create") { %>
+      <% } else { %>
         <a class="nav-item nav-link" href="/reminders">Reminder List</a>
+      <% } %>
+      <% if (locals.page == "create") { %>
         <a class="nav-item nav-link active" href="/reminder/new">Create</a>
-      <% } else if (locals.page != "register" && locals.page != "login") { %>
-        <a class="nav-item nav-link" href="/reminders">Reminder List</a>
+      <% } else { %>
         <a class="nav-item nav-link" href="/reminder/new">Create</a>
+      <% } %>
+      <% if (locals.page == "friends") { %>
+        <a class="nav-item nav-link active" href="/friends">Friends List</a>
+      <% } else { %>
+        <a class="nav-item nav-link" href="/friends">Friends List</a>
       <% } %>
     </div>
   </div>

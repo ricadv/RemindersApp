@@ -3,10 +3,10 @@ let database = require("../database");
 let remindersController = {
   list: (req, res) => {
     res.locals.page = "list"
-    let allReminders = [{ friend: req.user.email, reminders: req.user.reminders }]
+    let allReminders = [{ friend: req.user.email, username: req.user.username, picture: req.user.picture[1], reminders: req.user.reminders }]
     let friendsList = database[req.user.email].friends
     friendsList.forEach((friend) => {
-      allReminders.push({ friend: friend, reminders: database[friend].reminders })
+      allReminders.push({ friend: friend, username: database[friend].username, picture: database[friend].picture[1], reminders: database[friend].reminders })
     })
     console.log(allReminders)
     res.render('reminder/index', { reminders: allReminders })
@@ -33,7 +33,7 @@ let remindersController = {
     if (searchResult != undefined) {
       res.render('reminder/single-reminder', { reminderItem: searchResult })
     } else {
-      res.render('reminder/index', { reminders: req.user.reminders })
+      res.redirect('/reminders')
     }
   },
 

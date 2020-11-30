@@ -1,44 +1,41 @@
 <div class="container">
-  <h1 class="page-header">My Reminders</h1>
-
-  <ul class="list-group">
-    <% reminders[0].reminders.forEach(function (reminderItem) { %>
-      <li class="list-group-item">
-        <strong><%= reminderItem.title %>: </strong>
-        <%= reminderItem.description %>
-        || Completed:
-        <% if (reminderItem.completed == true) { %>
-          <span class="badge badge-success">True</span>
-        <% } else if (reminderItem.completed == false) { %>
-          <span class="badge badge-danger">False</span>
-        <% } %>
-        <a class="pull-right" href=<%= "/reminder/" + reminders[0].friend + "&" + reminderItem.id %>>View</a>
-      </li>
-    <% }) %>
-  </ul>
-
-</div>
-
-<div class="container">
-  <% reminders.slice(1).forEach(reminder => { %>
+  <% reminders.forEach(reminder => { %>
   
-    <h3 class="page-header"><%= reminder.friend %>'s Reminders</h3>
+    <h3 class="page-header mt-4">
+      <img src=<%= reminder.picture %> class="img-thumbnail mr-2" width="50px" data-toggle="popover-hover" data-content="<img src=<%= reminder.picture %>>">
+      <% if (reminder.friend == reminders[0].friend) { %>
+        My Reminders
+      <% } else { %>
+        <%= reminder.username %>'s Reminders
+      <% } %>
+    </h3>
 
     <ul class="list-group">
       <% reminder.reminders.forEach(function (reminderItem) { %>
         <li class="list-group-item">
           <strong><%= reminderItem.title %>: </strong>
           <%= reminderItem.description %>
-          || Completed:
+          || Status:
           <% if (reminderItem.completed == true) { %>
-            <span class="badge badge-success">True</span>
+            <span class="badge badge-success">Completed</span>
           <% } else if (reminderItem.completed == false) { %>
-            <span class="badge badge-danger">False</span>
+            <span class="badge badge-danger">Incomplete</span>
           <% } %>
-          <a class="pull-right" href=<%= "/reminder/" + reminder.friend + "&" + reminderItem.id %>>View</a>
+
+          <a class="float-right" href=<%= "/reminder/" + reminder.friend + "&" + reminderItem.id %>>View</a>
         </li>
       <% }) %>
     </ul>
   <% }) %>
 
 </div>
+
+<script>
+$(function(){
+    $('[data-toggle=popover-hover]').popover({
+      trigger: 'hover',
+      html: true,
+      placement: 'right'
+}) 
+});
+</script>
