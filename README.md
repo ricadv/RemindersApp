@@ -1,10 +1,5 @@
 # RemindersApp
 
-latest working version.
-reformatted (some/most? of) kevin's code so it works with joseph's
-added fifi's landing page images
-
-
 # App structure
 => all the routing is in index.js
 => everything related to authentication is in controller/auth_controller.js
