@@ -8,7 +8,6 @@ let remindersController = {
     friendsList.forEach((friend) => {
       allReminders.push({ friend: friend, username: database[friend].username, picture: database[friend].picture[1], reminders: database[friend].reminders })
     })
-    console.log(allReminders)
     res.render('reminder/index', { reminders: allReminders })
   },
 
@@ -38,7 +37,6 @@ let remindersController = {
   },
 
   create: (req, res) => {
-    console.log(req.body)
     let subtasks = []
     for (let [item,value] of Object.entries(req.body)) {
       if (item.includes("subtask") && value != "") {
@@ -69,7 +67,6 @@ let remindersController = {
       return reminder.id == reminderToFind;
     })
     res.render('reminder/edit', { reminderItem: searchResult })
-
   },
 
   update: (req, res) => {
@@ -107,7 +104,8 @@ let remindersController = {
     })
     database[req.user.email].reminders.splice(reminderIndex, 1);
     res.redirect('/reminders');
-  }
+  },
+
 }
 
 module.exports = remindersController;

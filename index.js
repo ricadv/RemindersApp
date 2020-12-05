@@ -42,7 +42,9 @@ app.post("/reminder/delete/:id", authCheck, reminderController.delete)
 
 app.get("/friends", authCheck, friendController.list)
 
-app.post("/friends", authCheck, friendController.update)
+app.post("/friends/add/:email", authCheck, friendController.add)
+
+app.post("/friends/delete/:email", authCheck, friendController.delete)
 
 app.get("/register", exitCheck, authController.register);
 

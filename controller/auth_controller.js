@@ -43,7 +43,6 @@ let authController = {
     res.locals.page = "register"
     // All 4 fields completed
     if (req.body.email && req.body.username && req.body.password && req.body.confirmation) {
-      console.log(Object.values(database).map(object => object.email))
       // Email is not in database
       if (req.body.email != Object.keys(database).find(item => item == req.body.email)) {
         // Password matches confirmation
