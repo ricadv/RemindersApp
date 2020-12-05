@@ -1,10 +1,14 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="/reminders">Reminder List</a>
-
+  <% if (locals.page != "login" && locals.page != "register") { %>
+    <a class="navbar-brand" href="/reminders">Reminder List</a>
+  <% } else { %>
+    <a class="navbar-brand" href="/">Remindly</a>
+  <% } %>
   <button class="navbar-toggler ml-auto mx-2" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
+  <% if (locals.page != "login" && locals.page != "register") { %>
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
       <% if (locals.page == "list") { %>
@@ -25,7 +29,6 @@
     </div>
   </div>
 
-  <% if (locals.page != "login" && locals.page != "register") { %>
     <form action ="/logout" method="POST">
       <button class="btn btn-outline-danger ml-auto" type="submit">Logout</button>
     </form>
