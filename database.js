@@ -1,3 +1,37 @@
+const MongoClient = require('mongodb').MongoClient;
+const uri = "mongodb+srv://joseph:mongodbpassword@remindersappmongodbclus.5lwzt.mongodb.net/remindersApp?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+
+// async function main() {
+//   try {
+//     await client.connect();
+//     // let databasesList  = await client.db().admin().listDatabases();
+//     // console.log("Databases:")
+//     // databasesList.databases.forEach(db => console.log(` - ${db.name}`));
+//     // let db = client.db("remindersApp")
+//     // let cursor = db.listCollections();
+//     // await cursor.forEach(col => console.log(col))
+//     // let collection = db.collection("database")
+//     // cursor = collection.find()
+//     // await cursor.forEach(doc => console.log(doc))
+//     // let result = await collection.findOne({ email: "cindy@cindy.com" })
+//     let cursor = client.db("remindersApp").collection("database").find()
+//     let all = await cursor.toArray()
+//     console.log(all)
+//     // let result = await client.db("remindersApp").collection("database").findOne({ email: "cindy@cindy.com" })
+//     // console.log(result)
+//     await client.close()
+//   }
+//   catch (e) {
+//     console.error(e);
+//   }
+// }
+
+// main().catch(console.error);
+
+
+
 let Database = {
     "cindy@cindy.com": {
         username: "cindy",

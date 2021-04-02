@@ -1,7 +1,7 @@
 let database = require("../database");
 
 let remindersController = {
-  list: (req, res) => {
+  list: async (req, res) => {
     res.locals.page = "list"
     let allReminders = [{ friend: req.user.email, username: req.user.username, picture: req.user.picture[1], reminders: req.user.reminders }]
     let friendsList = database[req.user.email].friends

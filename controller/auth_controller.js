@@ -1,5 +1,5 @@
 const fetch = require("node-fetch")
-let database = require("../database");
+const { getAll, insertOne } = require("../test.js")
 
 let authController = {
   login: (req, res) => {
@@ -14,77 +14,82 @@ let authController = {
 
   loginSubmit: (req, res) => {
     res.locals.page = "login"
-    // Both fields completed
-    if (req.body.email && req.body.password) {
-      // Email is in database
-      if (req.body.email == Object.keys(database).find(key => key == [req.body.email])) {
-        // Password is correct
-        if (database[req.body.email].password == req.body.password) {
-          req.session["user"] = req.body.email
-          res.redirect("/reminders");
-        // Wrong Password
+    const email = req.body.email
+    const password = req.body.password
+    getAll().then((data) => {
+      // Both fields completed
+      if (email && password) {
+        // Email is in database
+        if (data.find(user => user.email == email)) {
+          const correct_password = (data.find(user => user.email == email).password)
+          // Password is correct
+          if (correct_password == password) {
+            req.session["user"] = email
+            res.redirect("/reminders");
+          // Wrong Password
+          } else {
+            req.body.warning = "badPassword"
+            res.render("auth/login", { login: req.body });
+          }
+        // Email is not in database
         } else {
-          req.body.warning = "badPassword"
+          req.body.warning = "noUser"
           res.render("auth/login", { login: req.body });
         }
-      // Email is not in database
       } else {
-        req.body.warning = "noUser"
-        res.render("auth/login", { login: req.body });
+        // No email address
+        req.body.warning = "missingEmail"
+        res.render("auth/login", { login: req.body })
       }
-    } else {
-      // No email address
-      req.body.warning = "missingEmail"
-      res.render("auth/login", { login: req.body })
-    }
+    }).catch()
   },
 
   registerSubmit: async (req, res) => {
     res.locals.page = "register"
-    // All 4 fields completed
-    if (req.body.email && req.body.username && req.body.password && req.body.confirmation) {
-      // Email is not in database
-      if (req.body.email != Object.keys(database).find(item => item == req.body.email)) {
-        // Password matches confirmation
-        if (req.body.password == req.body.confirmation) {
-          database[req.body.email] = {
-            username: req.body.username, 
-            email: req.body.email, 
-            password: req.body.password,
-            picture: await getImage(), 
-            reminders: [], 
-            friends: []
-          };
-          console.log(database)
-          req.session["user"] = req.body.email;
-          res.redirect('/reminders');
-        // Password does not match confirmation
+    const email = req.body.email
+    const username = req.body.username
+    const password = req.body.password
+    const confirmation = req.body.confirmation
+    getAll().then((data) => {
+      // All 4 fields completed
+      if (email && username && password && confirmation) {
+        // Email is not in database
+        if (! data.find(user => user.email == email)) {
+          // Password matches confirmation
+          if (password == confirmation) {
+            const picture = getImage()
+            insertOne(username, email, password, picture).then(() => {
+              req.session["user"] = email;
+              res.redirect('/reminders');
+            })
+          // Password does not match confirmation
+          } else {
+            req.body.warning = "badPassword";
+            res.render("auth/register", { register: req.body });
+          }
+        // Email is already in database
         } else {
-          req.body.warning = "badPassword";
+          req.body.warning = "registered";
           res.render("auth/register", { register: req.body });
         }
-      // Email is already in database
-      } else {
+      // Empty email field
+      } else if (! email) {
+        req.body.warning = "noEmail";
+        res.render("auth/register", { register: req.body });
+      // Email is already registered
+      } else if (data.find(user => user.email == email)) {
         req.body.warning = "registered";
         res.render("auth/register", { register: req.body });
+      // Empty username field
+      } else if (! username) {
+        req.body.warning = "noUsername";
+        res.render("auth/register", { register: req.body });
+      // Empty password or confirmation field
+      } else {
+        req.body.warning = "noPassword"
+        res.render("auth/register", { register: req.body });
       }
-    // Empty email field
-    } else if (! req.body.email) {
-      req.body.warning = "noEmail";
-      res.render("auth/register", { register: req.body });
-    // Email is already registered
-    } else if (req.body.email == Object.keys(database).find(item => item == req.body.email)) {
-      req.body.warning = "registered";
-      res.render("auth/register", { register: req.body });
-    // Empty username field
-    } else if (! req.body.username) {
-      req.body.warning = "noUsername";
-      res.render("auth/register", { register: req.body });
-    // Empty password or confirmation field
-    } else {
-      req.body.warning = "noPassword"
-      res.render("auth/register", { register: req.body });
-    }
+    }).catch()
   },
 
   //logout. Simply destroy the session. 
