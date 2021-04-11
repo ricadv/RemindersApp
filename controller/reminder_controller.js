@@ -1,14 +1,28 @@
-let database = require("../database");
+const { getAll, getOne, updateOne } = require("../database");
 
 let remindersController = {
+
   list: async (req, res) => {
     res.locals.page = "list"
-    let allReminders = [{ friend: req.user.email, username: req.user.username, picture: req.user.picture[1], reminders: req.user.reminders }]
-    let friendsList = database[req.user.email].friends
-    friendsList.forEach((friend) => {
-      allReminders.push({ friend: friend, username: database[friend].username, picture: database[friend].picture[1], reminders: database[friend].reminders })
+    getAll().then((data) => {
+      let userDoc = data.find(userObj => userObj.email == req.session.user)
+      let friendsList = userDoc.friends
+      let allReminders = [{friend: userDoc.email, username: userDoc.username, picture: userDoc.picture[1], reminders: userDoc.reminders}]
+      data.forEach(userObj => {
+        if (friendsList.includes(userObj.email)) {
+          allReminders.push(
+            {
+              friend: userObj.email,
+              username: userObj.username,
+              picture: userObj.picture[1],
+              reminders: userObj.reminders
+            }
+          )
+        }
+      })
+      req.session["count"] = userDoc.reminders.length
+      res.render('reminder/index', { reminders: allReminders })
     })
-    res.render('reminder/index', { reminders: allReminders })
   },
 
   new: (req, res) => {
@@ -16,27 +30,26 @@ let remindersController = {
     res.render('reminder/create')
   },
 
-  listOne: (req, res) => {
-    if (req.user.email == req.params.username) {
+  listOne: async (req, res) => {
+    if (req.session.user == req.params.username) {
       res.locals.id = "user"
     }
-    let userToFind = req.params.username
-    let userFriend = Object.keys(database).find(function (username) {
-      return username == userToFind;
-    })
-
+    let target = req.params.username
     let reminderToFind = req.params.id;
-    let searchResult = database[userFriend].reminders.find(function (reminder) {
-      return reminder.id == reminderToFind;
+    getOne(target).then((data) => {
+      let targetReminder = data.reminders.find(function (reminder) {
+        return reminder.id == reminderToFind;
+      })
+      if (targetReminder != undefined) {
+        res.render('reminder/single-reminder', { reminderItem: targetReminder })
+      } else {
+        res.redirect('/reminders')
+      }
     })
-    if (searchResult != undefined) {
-      res.render('reminder/single-reminder', { reminderItem: searchResult })
-    } else {
-      res.redirect('/reminders')
-    }
   },
 
-  create: (req, res) => {
+  create: async (req, res) => {
+    let email = req.session.user
     let subtasks = []
     for (let [item,value] of Object.entries(req.body)) {
       if (item.includes("subtask") && value != "") {
@@ -50,29 +63,36 @@ let remindersController = {
       }
     }
     let reminder = {
-      id: req.user.reminders.length + 1,
+      id: req.session.count + 1,
       title: req.body.title,
       description: req.body.description,
       completed: false,
       subtasks: subtasks,
       tags: tags
     }
-    database[req.user.email].reminders.push(reminder);
-    res.redirect('/reminders');
+    getOne(email).then((data) => {
+      data.reminders.push(reminder)
+      updateOne(email, data).then(() =>{
+        res.redirect('/reminders');
+      })
+    })
+
   },
 
-  edit: (req, res) => {
+  edit: async (req, res) => {
+    let target = req.session.user
     let reminderToFind = req.params.id;
-    let searchResult = req.user.reminders.find(function (reminder) {
-      return reminder.id == reminderToFind;
+    getOne(target).then((data) => {
+      let targetReminder = data.reminders.find(function (reminder) {
+        return reminder.id == reminderToFind;
+      })
+      res.render('reminder/edit', { reminderItem: targetReminder })
     })
-    res.render('reminder/edit', { reminderItem: searchResult })
   },
 
   update: (req, res) => {
     let subtasks = []
     for (let [item,value] of Object.entries(req.body)) {
-      console.log(item, value)
       if (item.includes("subtask") && (value != "")) {
         let index = item.split("-")[1]
         subtasks.push({description: value, completed: req.body["subCompleted-" + index] == "true"})
@@ -84,26 +104,34 @@ let remindersController = {
         tags.push(value)
       }
     }
-    let reminderToFind = req.params.id;
-    let searchResult = database[req.user.email].reminders.find(function (reminder) {
-      if (reminder.id == reminderToFind) {
-        reminder.title = req.body.title,
-        reminder.description = req.body.description,
-        reminder.completed = req.body.completed == "true",
-        reminder.subtasks = subtasks,
-        reminder.tags = tags
-      }
-    });
-    res.redirect('/reminder/' + database[req.user.email].email + "&" + reminderToFind)
+
+    let email = req.session.user
+    let targetReminder = req.params.id;
+    getOne(email).then((data) => {
+      targetIndex = data.reminders.findIndex(reminder => reminder.id == targetReminder)
+      
+      data.reminders[targetIndex].title = req.body.title
+      data.reminders[targetIndex].description = req.body.description
+      data.reminders[targetIndex].completed = req.body.completed == "true"
+      data.reminders[targetIndex].subtasks = subtasks
+      data.reminders[targetIndex].tags = tags
+
+      updateOne(email, data).then(() =>{
+        res.redirect('/reminder/' + email + "&" + targetReminder)
+      })
+    })
   },
 
-  delete: (req, res) => {
-    let reminderToFind = req.params.id;
-    let reminderIndex = req.user.reminders.findIndex(function (reminder) {
-      return reminder.id == reminderToFind;
+  delete: async (req, res) => {
+    let email = req.session.user
+    let targetReminder = req.params.id;
+    getOne(email).then((data) => {
+      targetIndex = data.reminders.findIndex(reminder => reminder.id == targetReminder)
+      data.reminders.splice(targetIndex, 1)
+      updateOne(email, data).then(() =>{
+        res.redirect('/reminders');
+      })
     })
-    database[req.user.email].reminders.splice(reminderIndex, 1);
-    res.redirect('/reminders');
   },
 
 }

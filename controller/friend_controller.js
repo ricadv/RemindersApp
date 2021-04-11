@@ -1,32 +1,45 @@
 const fetch = require("node-fetch")
-let database = require("../database");
+let { getAll, getOne, updateOne } = require("../database");
 
 let friendController = {
-    list: (req, res) => {
+
+    list: async (req, res) => {
         res.locals.page = "friends"
-        user_list = Object.values(database).filter((user) => {
-            if (user != req.user) {
-                return user
-            }
+        getAll().then((data) => {
+            let user_list = data.filter((user) => {
+                if (user.email != req.session.user) {
+                    return user
+                }
+            })
+            let sessionUser = data.find(userObj => userObj.email == req.session.user)
+            user_list.unshift(sessionUser)
+            res.render('friend/friendlist', { users: user_list })
         })
-        user_list.unshift(req.user)
-        res.render('friend/friendlist', { users: user_list })
     },
 
-    add: (req, res) => {
-        friend = req.params.email
-        database[req.user.email].friends.push(friend);
-        res.redirect('/friends');
+    add: async (req, res) => {
+        let email = req.session.user
+        let friend = req.params.email
+        getOne(email).then((data) => {
+            data.friends.push(friend)
+            updateOne(email, data).then(() => {
+                res.redirect('/friends');
+            })
+        })
     },
 
     delete: (req, res) => {
+        let email = req.session.user
         let friendToFind = req.params.email;
-        let friendIndex = req.user.friends.findIndex(function (friend) {
-          return friend == friendToFind;
+        getOne(email).then((data) => {
+            let friendIndex = data.friends.findIndex(function (friend) {
+                return friend == friendToFind;
+            })
+            data.friends.splice(friendIndex, 1)
+            updateOne(email, data).then(() => {
+                res.redirect('/friends');
+            })
         })
-        database[req.user.email].friends.splice(friendIndex, 1);
-        console.log(database[req.user.email].friends)
-        res.redirect('/friends');
       },
 }
 

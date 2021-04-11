@@ -8,7 +8,6 @@ async function getAll() {
         await client.connect();
         const cursor = client.db("remindersApp").collection("database").find()
         const database = await cursor.toArray()
-        client.close()
         return database
     }
     catch (e) {
@@ -44,13 +43,14 @@ async function insertOne(username, email, password, picture) {
     }
 }
 
-async function updateOne(email, doc) {
+async function updateOne(email, data) {
     try {
         await client.connect();
         const filter = { email: email }
         const updateDoc = {
             $set: {
-                key: "value"
+                reminders: data.reminders,
+                friends: data.friends,
             }
         }
         const result = await client.db("remindersApp").collection("database").updateOne(filter, updateDoc)

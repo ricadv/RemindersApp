@@ -5,7 +5,9 @@ let exitCheck = (req, res, next) => {
         if (database[req.session.user]) {
             req.user = database[req.session.user];
             res.redirect("/reminders");
-        };
+        } else {
+            next();
+        }
     } else {
         next();
     }

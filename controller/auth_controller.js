@@ -1,5 +1,5 @@
 const fetch = require("node-fetch")
-const { getAll, insertOne } = require("../test.js")
+const { getAll, insertOne } = require("../database");
 
 let authController = {
   login: (req, res) => {
@@ -12,19 +12,20 @@ let authController = {
     res.render('auth/register', { email: req.query.email })
   },
 
-  loginSubmit: (req, res) => {
+  loginSubmit: async (req, res) => {
     res.locals.page = "login"
     const email = req.body.email
     const password = req.body.password
     getAll().then((data) => {
-      // Both fields completed
+      // If both fields completed
       if (email && password) {
-        // Email is in database
+        // If email is in database
         if (data.find(user => user.email == email)) {
           const correct_password = (data.find(user => user.email == email).password)
-          // Password is correct
+          // If password is correct
           if (correct_password == password) {
             req.session["user"] = email
+            console.log("match password")
             res.redirect("/reminders");
           // Wrong Password
           } else {
@@ -57,10 +58,11 @@ let authController = {
         if (! data.find(user => user.email == email)) {
           // Password matches confirmation
           if (password == confirmation) {
-            const picture = getImage()
-            insertOne(username, email, password, picture).then(() => {
-              req.session["user"] = email;
-              res.redirect('/reminders');
+            getImage().then(picture => {
+              insertOne(username, email, password, picture).then(() => {
+                req.session["user"] = email;
+                res.redirect('/reminders');
+              })
             })
           // Password does not match confirmation
           } else {
