@@ -1,0 +1,17 @@
+[Unit]
+Description=Reminders App
+
+[Service]
+WorkingDirectory=/home/ec2-user/RemindersApp
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=remindersapp
+User=ec2-user
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=cloud-init.target
+
